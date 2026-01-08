@@ -1,4 +1,5 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from app.core.dependencies import getCurrentUser
 from app.services.coingecko import getCryptoPrice
 from app.schemas.crypto import CryptoPriceResponse
 
@@ -8,8 +9,8 @@ router = APIRouter(
 )
 
 @router.get("/{cryptoName}", response_model=CryptoPriceResponse)
-def getPrice(cryptoName: str):
-    price = getCryptoPrice(cryptoName)
+async def getPrice(cryptoName: str, currentUser=Depends(getCurrentUser) ):
+    price = await getCryptoPrice(cryptoName)
 
     return {
         "crypto": cryptoName,
