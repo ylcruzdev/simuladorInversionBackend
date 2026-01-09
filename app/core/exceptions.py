@@ -1,5 +1,5 @@
 class CryptoNotFoundError(Exception):
     pass
 
-class ExternalAPIError(Exception):
+class ExternalApiError(Exception):
     pass

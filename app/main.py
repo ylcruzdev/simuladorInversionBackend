@@ -1,18 +1,23 @@
 from fastapi import FastAPI
+from app.core.database import initDB
 from app.routers import crypto, auth
 from app.core.errorHandlers import (
-    crypto_not_found_handler,
-    external_api_error_handler
+    cryptoNotFoundHandler,
+    externalApiErrorHandler
 )
 from app.core.exceptions import (
     CryptoNotFoundError,
-    ExternalAPIError
+    ExternalApiError
 )
 
 app = FastAPI()
 
-app.add_exception_handler(CryptoNotFoundError, crypto_not_found_handler)
-app.add_exception_handler(ExternalAPIError, external_api_error_handler)
+@app.on_event("startup")
+async def on_startup():
+    await initDB()
+
+app.add_exception_handler(CryptoNotFoundError, cryptoNotFoundHandler)
+app.add_exception_handler(ExternalApiError, externalApiErrorHandler)
 
 app.include_router(auth.router)
 app.include_router(crypto.router)

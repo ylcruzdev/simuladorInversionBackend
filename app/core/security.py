@@ -9,7 +9,6 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
 pwdContext = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-
 def hashPassword(password: str) -> str:
     return pwdContext.hash(password)
 
