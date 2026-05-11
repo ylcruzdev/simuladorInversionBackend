@@ -1,20 +1,19 @@
-#Imagen base con Python
 FROM python:3.12-slim
 
-#Crear directorio de trabajo dentro del contenedor
+LABEL maintainer="dev@simuladorinversion.com"
+LABEL description="FastAPI backend for simulador de inversiones"
+LABEL version="1.0.0"
+
 WORKDIR /app
 
-#Copiar requirements primero (optimización de cache)
 COPY requirements.txt .
-
-#Instalar dependencias
 RUN pip install --no-cache-dir -r requirements.txt
 
-#Copiar el resto del código
 COPY ./app ./app
 
-#Exponer el puerto
 EXPOSE 8000
 
-#Comando para ejecutar la app
+HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
+  CMD curl --fail http://localhost:8000/docs || exit 1
+
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
